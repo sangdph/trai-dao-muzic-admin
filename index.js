@@ -5,32 +5,32 @@ const formSubmit = document.querySelector(".form-submit");
 let updateId = null;
 const filterInput = document.querySelector(".filter");
 
-// function debounceFn(func, wait, immediate) {
-//   let timeout;
-//   return function () {
-//     let context = this,
-//       args = arguments;
-//     let later = function () {
-//       timeout = null;
-//       if (!immediate) func.apply(context, args);
-//     };
-//     let callNow = immediate && !timeout;
-//     clearTimeout(timeout);
-//     timeout = setTimeout(later, wait);
-//     if (callNow) func.apply(context, args);
-//   };
-// }
+function debounceFn(func, wait, immediate) {
+  let timeout;
+  return function () {
+    let context = this,
+      args = arguments;
+    let later = function () {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    let callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
 
-// filterInput.addEventListener(
-//   "keyup",
-//   debounceFn(async function (e) {
-//     // const response = await fetch(`${endpoint}?title_like=${e.target.value}`);
-//     // const data = await response.json();
-//     // console.log(data);
-//     const path = `${endpoint}?title_like=${e.target.value}`;
-//     getCourses(path);
-//   }, 500)
-// );
+filterInput.addEventListener(
+  "keyup",
+  debounceFn(async function (e) {
+    // const response = await fetch(`${endpoint}?title_like=${e.target.value}`);
+    // const data = await response.json();
+    // console.log(data);
+    const path = `${endpoint}/search?song=${e.target.value}`;
+    getSongs(path);
+  }, 500)
+);
 
 async function addCourse({ image, song, author, url }) {
   const response = await fetch(endpoint, {
@@ -49,7 +49,7 @@ async function addCourse({ image, song, author, url }) {
 }
 
 function renderItem(item) {
-  console.log("renderItem: ", item);
+  // console.log("renderItem: ", item);
   const template = `<div class="item-music">
     <img
       class="picture-music"
@@ -57,12 +57,13 @@ function renderItem(item) {
       alt=""
     />
     <div class="name-music">${item.song} - ${item.author}</div>
+    <i class="fa-solid fa-circle-minus song-remove" data-id="${item._id}"></i>
+    <!--<i class="fa-regular fa-pen-to-square song-edit" data-id="${item._id}"></i>-->
     <a
       href="${item.url}"
       download=""
       ><i
         class="fa-regular fa-circle-down download"
-        style="color: green"
       ></i
     ></a>
   </div>`;
@@ -108,31 +109,37 @@ formPost.addEventListener("submit", async function (e) {
   getSongs();
 });
 
-// courseList.addEventListener("click", async function (e) {
-//   if (e.target.matches(".course-remove")) {
-//     const id = +e.target.dataset.id;
-//     await deleteCourse(id);
-//     getCourses();
-//   } else if (e.target.matches(".course-edit")) {
-//     const id = +e.target.dataset.id;
-//     const data = await getSingleCourse(id);
-//     formPost.elements["image"].value = data.image;
-//     formPost.elements["title"].value = data.title;
-//     formPost.elements["author"].value = data.author;
-//     formPost.elements["rating"].value = data.rating;
-//     formPost.elements["price"].value = data.price;
-//     formPost.elements["bestSeller"].checked = data.bestSeller;
-//     formPost.elements["buyAmount"].value = data.buyAmount;
-//     formSubmit.textContent = "Update Course";
-//     updateId = id;
-//   }
-// });
+listMusic.addEventListener("click", async function (e) {
+  console.log("sang là con gà");
+  if (e.target.matches(".song-remove")) {
+    // console.log("sang là con gà .song-remove");
+    // console.log("sang là con gà datasetId: ", e.target.dataset.id);
+    const id = e.target.dataset.id;
+    // console.log("sang là con gà id: ", id);
+    await deleteSong(id);
+    getSongs();
+  }
+  // else if (e.target.matches(".song-edit")) {
+  //   const id = +e.target.dataset.id;
+  //   const data = await getSingleCourse(id);
+  //   formPost.elements["image"].value = data.image;
+  //   formPost.elements["title"].value = data.title;
+  //   formPost.elements["author"].value = data.author;
+  //   formPost.elements["rating"].value = data.rating;
+  //   formPost.elements["price"].value = data.price;
+  //   formPost.elements["bestSeller"].checked = data.bestSeller;
+  //   formPost.elements["buyAmount"].value = data.buyAmount;
+  //   formSubmit.textContent = "Update Course";
+  //   updateId = id;
+  // }
+});
 
-// async function deleteCourse(id) {
-//   const response = await fetch(`${endpoint}/${id}`, {
-//     method: "DELETE",
-//   });
-// }
+async function deleteSong(id) {
+  console.log("sang là con gà deleteSong: ", id);
+  const response = await fetch(`${endpoint}/delete/${id}`, {
+    method: "DELETE",
+  });
+}
 
 // async function updateCourse({
 //   updateId,

@@ -31,6 +31,7 @@
   padding: 10px 15px;
   border-radius: 4px;
   font-size: 32px;
+  cursor: pointer;
 }
 
 .main {
@@ -70,10 +71,30 @@
   border-radius: 1111px;
 }
 
+.main .list-music .item-music .song-remove {
+  position: absolute;
+  /* right: 3.4em; */
+  right: 2.2em;
+  height: 100%;
+  font-size: 48px;
+  color: var(--trai-dao-muzic);
+  cursor: pointer;
+}
+
+.main .list-music .item-music .song-edit {
+  position: absolute;
+  right: 2.2em;
+  height: 100%;
+  font-size: 48px;
+  color: #84495f;
+  cursor: pointer;
+}
+
 .main .list-music .item-music .download {
   position: absolute;
   right: 1em;
   height: 100%;
   font-size: 48px;
-  color: var(--trai-dao-muzic);
+  color: green;
+  cursor: pointer;
 }
